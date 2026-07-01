@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To Do List</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+
+    <!-- Header -->
+
+    <header>
+
+        <div>
+            <h1>To Do List</h1>
+            <p>Stay organized, one task at a time.</p>
+        </div>
+
+        <button id="themeBtn" class="theme-btn">
+            <i class="fa-solid fa-moon"></i>
+        </button>
+
+    </header>
+
+    <!-- Main -->
+
+    <main>
+
+        <!-- Left -->
+
+        <section class="todo-section">
+
+            <div class="card">
+
+                <div class="card-header">
+
+                    <h2>
+                        Today's Tasks
+                    </h2>
+
+                    <span id="taskCount">
+                        0 Tasks
+                    </span>
+
+                </div>
+
+                <div id="emptyState" class="empty">
+
+                    <i class="fa-regular fa-note-sticky"></i>
+
+                    <h3>No Tasks Yet</h3>
+
+                    <p>Click the + button below to add your first task.</p>
+
+                </div>
+
+                <ul id="taskList">
+
+                </ul>
+
+            </div>
+
+        </section>
+
+        <!-- Right -->
+
+        <aside class="sidebar">
+
+            <div class="note-card">
+
+                <h3>
+                    📝 Notes
+                </h3>
+
+                <textarea
+                    id="notes"
+                    placeholder="Write notes here..."
+                ></textarea>
+
+            </div>
+
+            <div class="note-card">
+
+                <h3>
+                    🎯 Focus
+                </h3>
+
+                <textarea
+                    id="focus"
+                    placeholder="Today's main goal..."
+                ></textarea>
+
+            </div>
+
+            <div class="note-card">
+
+                <h3>
+                    💡 Remember
+                </h3>
+
+                <textarea
+                    id="remember"
+                    placeholder="Don't forget..."
+                ></textarea>
+
+            </div>
+
+        </aside>
+
+    </main>
+
+</div>
+
+<!-- Floating Button -->
+
+<button id="addTaskBtn" class="fab">
+
+    <i class="fa-solid fa-plus"></i>
+
+</button>
+
+<!-- Add/Edit Modal -->
+
+<div id="taskModal" class="modal">
+
+    <div class="modal-content">
+
+        <div class="modal-header">
+
+            <h2 id="modalTitle">
+                Add Task
+            </h2>
+
+            <button id="closeModal">
+
+                <i class="fa-solid fa-xmark"></i>
+
+            </button>
+
+        </div>
+
+        <input
+            id="taskInput"
+            type="text"
+            placeholder="What needs to be done?"
+            maxlength="100"
+        >
+
+        <textarea
+            id="taskDescription"
+            placeholder="Optional description..."
+        ></textarea>
+
+        <div class="modal-actions">
+
+            <button id="cancelBtn" class="secondary">
+
+                Cancel
+
+            </button>
+
+            <button id="saveTask">
+
+                Save Task
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Delete Confirmation -->
+
+<div id="confirmModal" class="modal">
+
+    <div class="confirm-box">
+
+        <i class="fa-solid fa-trash-can"></i>
+
+        <h2>Delete Task?</h2>
+
+        <p>This action cannot be undone.</p>
+
+        <div class="confirm-buttons">
+
+            <button id="cancelDelete" class="secondary">
+
+                Cancel
+
+            </button>
+
+            <button id="confirmDelete" class="danger">
+
+                Delete
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Toast -->
+
+<div id="toast" class="toast">
+
+    Task Added
+
+</div>
+
+<!-- Confetti -->
+
+<canvas id="confetti"></canvas>
+
+<script src="script.js"></script>
+
+</body>
+</html>
