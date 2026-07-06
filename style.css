@@ -1,0 +1,879 @@
+/* ===========================
+   RESET
+=========================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:'Poppins',sans-serif;
+    background:linear-gradient(135deg,#f7e8ff,#dff6ff,#fff5e8);
+    color:#333;
+    transition:.3s;
+}
+
+:root{
+
+    --primary:#8b5cf6;
+    --secondary:#f7c8d9;
+
+    --bg:#f8f4ff2e;
+    --card:#fffbfb;
+
+    --text:#222;
+    --text-light:#666;
+
+    --shadow:0 10px 25px rgba(0,0,0,.08);
+
+    --radius:18px;
+
+}
+
+/* ===========================
+   LAYOUT
+=========================== */
+
+.container{
+
+    width:min(1200px,92%);
+    margin:auto;
+    padding:35px 0 100px;
+
+}
+
+header{
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:35px;
+
+}
+
+header h1{
+
+    font-size:2.2rem;
+    font-weight:700;
+    color:var(--primary);
+
+}
+
+header p{
+
+    color:var(--text-light);
+    margin-top:6px;
+
+}
+
+main{
+
+    display:grid;
+    grid-template-columns:2fr 1fr;
+    gap:25px;
+
+}
+
+/* ===========================
+   THEME BUTTON
+=========================== */
+
+.theme-btn{
+
+    width:55px;
+    height:55px;
+
+    border:none;
+    border-radius:50%;
+
+    background:white;
+
+    box-shadow:var(--shadow);
+
+    cursor:pointer;
+
+    font-size:20px;
+
+    transition:.3s;
+
+}
+
+.theme-btn:hover{
+
+    transform:rotate(20deg) scale(1.08);
+
+}
+
+/* ===========================
+   CARDS
+=========================== */
+
+.card,
+.note-card{
+
+    background:var(--card);
+
+    border-radius:var(--radius);
+
+    box-shadow:var(--shadow);
+
+    padding:25px;
+
+}
+
+.card-header{
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    margin-bottom:20px;
+
+}
+
+.card-header h2{
+
+    font-size:1.3rem;
+
+}
+
+.card-header span{
+
+    font-size:.9rem;
+    color:gray;
+
+}
+
+/* ===========================
+   TASK LIST
+=========================== */
+
+#taskList{
+
+    list-style:none;
+
+}
+
+.task{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    gap:15px;
+
+    padding:15px;
+
+    border-radius:14px;
+
+    margin-bottom:15px;
+
+    background:#fafafa;
+
+    transition:.25s;
+
+}
+
+.task:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:0 10px 18px rgba(0,0,0,.08);
+
+}
+
+.task-left{
+
+    display:flex;
+    align-items:center;
+    gap:15px;
+
+    flex:1;
+
+}
+
+.task input[type="checkbox"]{
+
+    width:20px;
+    height:20px;
+
+    accent-color:var(--primary);
+
+    cursor:pointer;
+
+}
+
+.task-content{
+
+    display:flex;
+    flex-direction:column;
+
+}
+
+.task-title{
+
+    font-size:16px;
+    font-weight:500;
+
+}
+
+.task-desc{
+
+    font-size:13px;
+    color:gray;
+    margin-top:3px;
+
+}
+
+.completed .task-title{
+
+    text-decoration:line-through;
+    opacity:.6;
+
+}
+
+.completed{
+
+    opacity:.75;
+
+}
+
+/* ===========================
+   ACTION BUTTONS
+=========================== */
+
+.task-actions{
+
+    display:flex;
+    gap:10px;
+
+}
+
+.icon-btn{
+
+    border:none;
+
+    background:#f3f3f3;
+
+    width:38px;
+    height:38px;
+
+    border-radius:50%;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+}
+
+.icon-btn:hover{
+
+    background:var(--primary);
+
+    color:white;
+
+    transform:scale(1.08);
+
+}
+
+/* ===========================
+   EMPTY STATE
+=========================== */
+
+.empty{
+
+    text-align:center;
+
+    padding:50px 20px;
+
+    color:gray;
+
+}
+
+.empty i{
+
+    font-size:55px;
+
+    color:#d5c8ff;
+
+    margin-bottom:15px;
+
+}
+
+.empty h3{
+
+    margin-bottom:8px;
+
+}
+
+/* ===========================
+   SIDEBAR
+=========================== */
+
+.sidebar{
+
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+
+}
+
+.note-card h3{
+
+    margin-bottom:15px;
+
+}
+
+.note-card textarea{
+
+    width:100%;
+    min-height:130px;
+
+    border:none;
+
+    resize:none;
+
+    outline:none;
+
+    font-size:15px;
+
+    font-family:inherit;
+
+    background:transparent;
+
+    color:var(--text);
+
+}
+
+/* ===========================
+   FLOATING BUTTON
+=========================== */
+
+.fab{
+
+    position:fixed;
+
+    right:30px;
+
+    bottom:30px;
+
+    width:65px;
+
+    height:65px;
+
+    border:none;
+
+    border-radius:50%;
+
+    background:var(--primary);
+
+    color:white;
+
+    font-size:24px;
+
+    cursor:pointer;
+
+    box-shadow:0 15px 35px rgba(139,92,246,.35);
+
+    transition:.3s;
+
+    z-index:100;
+
+}
+
+.fab:hover{
+
+    transform:translateY(-6px) scale(1.05);
+
+}
+
+/* ===========================
+   BUTTONS
+=========================== */
+
+button{
+
+    font-family:inherit;
+
+}
+
+.secondary{
+
+    background:#ececec;
+    color:#444;
+
+}
+
+.danger{
+
+    background:#ef4444;
+    color:white;
+
+}
+
+/* ===========================
+   RESPONSIVE
+=========================== */
+
+@media(max-width:900px){
+
+main{
+
+grid-template-columns:1fr;
+
+}
+
+.sidebar{
+
+margin-top:5px;
+
+}
+
+}
+
+@media(max-width:600px){
+
+.container{
+
+width:94%;
+
+padding-top:25px;
+
+}
+
+header h1{
+
+font-size:1.7rem;
+
+}
+
+.card,
+.note-card{
+
+padding:18px;
+
+}
+
+.task{
+
+padding:12px;
+
+}
+
+.task-title{
+
+font-size:15px;
+
+}
+
+.task-desc{
+
+font-size:12px;
+
+}
+
+.fab{
+
+width:58px;
+height:58px;
+
+right:18px;
+bottom:18px;
+
+font-size:22px;
+
+}
+}
+/* ===================================
+   MODAL
+=================================== */
+
+.modal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.45);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    opacity:0;
+    visibility:hidden;
+    transition:.3s;
+    z-index:1000;
+}
+
+.modal.show{
+    opacity:1;
+    visibility:visible;
+}
+
+.modal-content,
+.confirm-box{
+
+    width:min(450px,90%);
+    background:var(--card);
+    border-radius:20px;
+    padding:25px;
+    box-shadow:0 20px 50px rgba(0, 0, 0, 0.147);
+
+    transform:translateY(20px) scale(.95);
+    transition:.3s;
+
+}
+
+.modal.show .modal-content,
+.modal.show .confirm-box{
+
+    transform:translateY(0) scale(1);
+
+}
+
+.modal-header{
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+
+}
+
+.modal-header button{
+
+    border:none;
+    background:none;
+    cursor:pointer;
+    font-size:22px;
+    color:gray;
+
+}
+
+.modal input,
+.modal textarea{
+
+    width:100%;
+    padding:14px;
+
+    margin-bottom:15px;
+
+    border:1px solid #ddd;
+    border-radius:12px;
+
+    font-family:inherit;
+    font-size:15px;
+    outline:none;
+
+    transition:.25s;
+
+}
+
+.modal textarea{
+
+    resize:none;
+    min-height:100px;
+
+}
+
+.modal input:focus,
+.modal textarea:focus{
+
+    border-color:var(--primary);
+    box-shadow:0 0 0 3px rgba(139,92,246,.15);
+
+}
+
+.modal-actions{
+
+    display:flex;
+    justify-content:flex-end;
+    gap:10px;
+
+}
+
+.modal-actions button,
+.confirm-buttons button{
+
+    padding:12px 20px;
+    border:none;
+    border-radius:12px;
+    cursor:pointer;
+    font-weight:600;
+    transition:.25s;
+
+}
+
+.modal-actions button:last-child{
+
+    background:var(--primary);
+    color:white;
+
+}
+
+.modal-actions button:hover,
+.confirm-buttons button:hover{
+
+    transform:translateY(-2px);
+
+}
+
+/* ===================================
+   DELETE MODAL
+=================================== */
+
+.confirm-box{
+
+    text-align:center;
+
+}
+
+.confirm-box i{
+
+    font-size:45px;
+    color:#ef4444;
+    margin-bottom:15px;
+
+}
+
+.confirm-box h2{
+
+    margin-bottom:10px;
+
+}
+
+.confirm-box p{
+
+    color:gray;
+    margin-bottom:20px;
+
+}
+
+.confirm-buttons{
+
+    display:flex;
+    justify-content:center;
+    gap:12px;
+
+}
+
+/* ===================================
+   TOAST
+=================================== */
+
+.toast{
+
+    position:fixed;
+
+    top:30px;
+    right:30px;
+
+    background:#222;
+    color:white;
+
+    padding:14px 22px;
+
+    border-radius:14px;
+
+    box-shadow:0 10px 25px rgba(0,0,0,.25);
+
+    transform:translateX(150%);
+    transition:.35s;
+
+    z-index:2000;
+
+}
+
+.toast.show{
+
+    transform:translateX(0);
+
+}
+
+/* ===================================
+   CONFETTI
+=================================== */
+
+#confetti{
+
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    z-index:1500;
+
+}
+
+/* ===================================
+   ANIMATIONS
+=================================== */
+
+.task{
+
+    animation:fadeIn .35s ease;
+
+}
+
+@keyframes fadeIn{
+
+    from{
+        opacity:0;
+        transform:translateY(12px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+
+}
+
+.completed{
+
+    animation:completed .35s ease;
+
+}
+
+@keyframes completed{
+
+    0%{
+        transform:scale(1);
+    }
+
+    40%{
+        transform:scale(1.02);
+    }
+
+    100%{
+        transform:scale(1);
+    }
+
+}
+
+.fab{
+
+    animation:float 3s ease-in-out infinite;
+
+}
+
+@keyframes float{
+
+    0%{
+        transform:translateY(0);
+    }
+
+    50%{
+        transform:translateY(-8px);
+    }
+
+    100%{
+        transform:translateY(0);
+    }
+
+}
+
+/* ===================================
+   SCROLLBAR
+=================================== */
+
+::-webkit-scrollbar{
+
+    width:8px;
+
+}
+
+::-webkit-scrollbar-thumb{
+
+    background:#c9b7ff;
+    border-radius:20px;
+
+}
+
+::-webkit-scrollbar-track{
+
+    background:transparent;
+
+}
+
+/* ===================================
+   DARK MODE
+=================================== */
+
+body.dark{
+
+    --bg:#1b1b22;
+    --card:#2a2b35;
+    --text:#f5f5f5;
+    --text-light:#bdbdbd;
+
+    background:var(--bg);
+    color:var(--text);
+
+}
+
+body.dark .task{
+
+    background:#333542;
+
+}
+
+body.dark .theme-btn{
+
+    background:#383945;
+    color:white;
+
+}
+
+body.dark input,
+body.dark textarea{
+
+    background:#3a3b48;
+    color:white;
+    border-color:#555;
+
+}
+
+body.dark .icon-btn{
+
+    background:#40414d;
+    color:white;
+
+}
+
+body.dark .secondary{
+
+    background:#444654;
+    color:white;
+
+}
+
+body.dark .toast{
+
+    background:white;
+    color:#222;
+
+}
+
+/* ===================================
+   TRANSITIONS
+=================================== */
+
+body,
+.card,
+.note-card,
+.task,
+button,
+textarea,
+input{
+
+    transition:
+        background .3s,
+        color .3s,
+        border .3s,
+        box-shadow .3s,
+        transform .25s;
+
+}
