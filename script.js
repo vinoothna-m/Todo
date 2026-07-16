@@ -1,426 +1,573 @@
-// ================================
-// ELEMENTS
-// ================================
+/*=====================================
+    DOM ELEMENTS
+=====================================*/
 
-const taskList = document.getElementById("taskList");
-const emptyState = document.getElementById("emptyState");
-const taskCount = document.getElementById("taskCount");
+const taskModal = document.getElementById("taskModal");
 
-const addBtn = document.getElementById("addTaskBtn");
-const modal = document.getElementById("taskModal");
-const closeModal = document.getElementById("closeModal");
+const addTaskBtn = document.getElementById("addTaskBtn");
+
 const cancelBtn = document.getElementById("cancelBtn");
-const saveBtn = document.getElementById("saveTask");
 
-const taskInput = document.getElementById("taskInput");
-const taskDescription = document.getElementById("taskDescription");
-const modalTitle = document.getElementById("modalTitle");
-
-const themeBtn = document.getElementById("themeBtn");
+const taskForm = document.getElementById("taskForm");
 
 const toast = document.getElementById("toast");
 
-const notes = document.getElementById("notes");
-const focus = document.getElementById("focus");
-const remember = document.getElementById("remember");
+const taskTitle = document.getElementById("taskTitle");
 
-const confirmModal = document.getElementById("confirmModal");
-const confirmDelete = document.getElementById("confirmDelete");
-const cancelDelete = document.getElementById("cancelDelete");
+const taskDescription = document.getElementById("taskDescription");
 
-let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+const taskCategory = document.getElementById("taskCategory");
 
-let editIndex = null;
-let deleteIndex = null;
+const taskPriority = document.getElementById("taskPriority");
 
-// ================================
-// STORAGE
-// ================================
+const taskDate = document.getElementById("taskDate");
 
-function saveTasks() {
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-}
+/*=====================================
+    APPLICATION STATE
+=====================================*/
 
-function loadText(id, element) {
-    element.value = localStorage.getItem(id) || "";
+let tasks = [];
 
-    element.addEventListener("input", () => {
-        localStorage.setItem(id, element.value);
-    });
-}
+let editingTaskId = null;
 
-loadText("notes", notes);
-loadText("focus", focus);
-loadText("remember", remember);
+let currentStatusFilter = "all";
 
-// ================================
-// DARK MODE
-// ================================
+let currentCategoryFilter = "all";
 
-if (localStorage.getItem("theme") === "dark") {
-    document.body.classList.add("dark");
-    themeBtn.innerHTML = '<i class="fa-solid fa-sun"></i>';
-}
+let currentSearchTerm = "";
 
-themeBtn.onclick = () => {
+/*=====================================
+    MODAL
+=====================================*/
 
-    document.body.classList.toggle("dark");
+function openModal() {
 
-    if (document.body.classList.contains("dark")) {
+    taskModal.style.display = "flex";
 
-        localStorage.setItem("theme", "dark");
-
-        themeBtn.innerHTML =
-            '<i class="fa-solid fa-sun"></i>';
-
-    } else {
-
-        localStorage.setItem("theme", "light");
-
-        themeBtn.innerHTML =
-            '<i class="fa-solid fa-moon"></i>';
-
-    }
-
-};
-
-// ================================
-// MODAL
-// ================================
-
-function openModal(edit = false) {
-
-    modal.classList.add("show");
-
-    taskInput.focus();
-
-    if (!edit) {
-
-        modalTitle.textContent = "Add Task";
-
-        taskInput.value = "";
-        taskDescription.value = "";
-
-        editIndex = null;
-
-    }
+    taskTitle.focus();
+    taskModal.setAttribute("aria-hidden","false");
 
 }
 
-function closeTaskModal() {
+function closeModal() {
 
-    modal.classList.remove("show");
+    editingTaskId = null;
+
+    document.getElementById("modalTitle").textContent = "Add Task";
+
+    taskForm.reset();
+
+    taskModal.style.display = "none";
+    taskModal.setAttribute("aria-hidden","true");
 
 }
-
-addBtn.onclick = () => openModal();
-
-closeModal.onclick = closeTaskModal;
-
-cancelBtn.onclick = closeTaskModal;
-
-// ================================
-// TOAST
-// ================================
+/*=====================================
+    TOAST
+=====================================*/
 
 function showToast(message) {
 
     toast.textContent = message;
 
-    toast.classList.add("show");
+    toast.style.opacity = "1";
+    toast.style.transform="translateY(0)";
 
     setTimeout(() => {
 
-        toast.classList.remove("show");
+        toast.style.opacity = "0";
+        toast.style.transform="translateY(30px)";
 
     }, 2500);
 
 }
+/*=====================================
+    FORM VALIDATION
+=====================================*/
 
-// ================================
-// SAVE TASK
-// ================================
+function validateForm() {
 
-saveBtn.onclick = saveTask;
+    if (taskTitle.value.trim() === "") {
 
-taskInput.addEventListener("keydown", e => {
+        showToast("Please enter a task title.");
 
-    if (e.key === "Enter") {
+        taskTitle.focus();
 
-        saveTask();
-
-    }
-
-});
-
-function saveTask() {
-
-    const title = taskInput.value.trim();
-
-    const desc = taskDescription.value.trim();
-
-    if (!title) return;
-
-    if (editIndex === null) {
-
-        tasks.push({
-
-            title,
-
-            desc,
-
-            completed: false
-
-        });
-
-        showToast("✓ Task Added");
-
-    } else {
-
-        tasks[editIndex].title = title;
-
-        tasks[editIndex].desc = desc;
-
-        showToast("✓ Task Updated");
+        return false;
 
     }
 
-    saveTasks();
+    return true;
 
-    renderTasks();
+}
+/*=====================================
+    TASK MODEL
+=====================================*/
 
-    closeTaskModal();
+function createTaskObject() {
+
+    return {
+
+        id: Date.now(),
+
+        title: taskTitle.value.trim(),
+
+        description: taskDescription.value.trim(),
+
+        category: taskCategory.value,
+
+        priority: taskPriority.value,
+
+        dueDate: taskDate.value,
+
+        completed: false
+
+    };
+
+}
+/*=====================================
+    LOCAL STORAGE
+=====================================*/
+
+function saveTasks() {
+
+    localStorage.setItem("tasks", JSON.stringify(tasks));
 
 }
 
-// ================================
-// KEYBOARD SHORTCUTS
-// ================================
+function loadTasks() {
 
-document.addEventListener("keydown", e => {
+    const storedTasks = localStorage.getItem("tasks");
 
-    if (e.ctrlKey && e.key.toLowerCase() === "n") {
+    if (!storedTasks) return;
 
-        e.preventDefault();
+    tasks = JSON.parse(storedTasks);
 
-        openModal();
+}
+/*=====================================
+    THEME
+=====================================*/
 
-    }
+function applyTheme(theme) {
 
-    if (e.ctrlKey && e.key.toLowerCase() === "d") {
+    document.body.classList.toggle("dark-mode", theme === "dark");
 
-        e.preventDefault();
+    const themeButton = document.getElementById("themeToggle");
 
-        themeBtn.click();
+    themeButton.textContent = theme === "dark" ? "☀️" : "🌙";
 
-    }
+}
 
-    if (e.key === "Escape") {
+function toggleTheme() {
 
-        closeTaskModal();
+    const currentTheme =
+        document.body.classList.contains("dark-mode")
+            ? "light"
+            : "dark";
 
-        confirmModal.classList.remove("show");
+    applyTheme(currentTheme);
 
-    }
+    localStorage.setItem("theme", currentTheme);
 
-});
-// ================================
-// RENDER TASKS
-// ================================
+}
+
+function loadTheme() {
+
+    const savedTheme = localStorage.getItem("theme") || "light";
+
+    applyTheme(savedTheme);
+
+}
+/*=====================================
+    RENDER TASKS
+=====================================*/
 
 function renderTasks() {
 
+    const taskList = document.getElementById("taskList");
+
+    const emptyState = document.getElementById("emptyState");
+
     taskList.innerHTML = "";
 
-    taskCount.textContent = `${tasks.length} Task${tasks.length !== 1 ? "s" : ""}`;
+    let filteredTasks = [...tasks];
 
-    emptyState.style.display = tasks.length ? "none" : "block";
+    /* Status Filter */
 
-    tasks.forEach((task, index) => {
+    if (currentStatusFilter === "active") {
 
-        const li = document.createElement("li");
-        li.className = "task";
+        filteredTasks = filteredTasks.filter(task => !task.completed);
 
-        if (task.completed) li.classList.add("completed");
+    }
 
-        li.innerHTML = `
-            <div class="task-left">
+    if (currentStatusFilter === "completed") {
 
-                <input type="checkbox" ${task.completed ? "checked" : ""}>
+        filteredTasks = filteredTasks.filter(task => task.completed);
 
-                <div class="task-content">
+    }
 
-                    <div class="task-title">${task.title}</div>
+    /* Category */
 
-                    ${task.desc ? `<div class="task-desc">${task.desc}</div>` : ""}
+    if (currentCategoryFilter !== "all") {
 
-                </div>
+        filteredTasks = filteredTasks.filter(task => task.category === currentCategoryFilter);
+
+    }
+
+    /* Search */
+
+    if (currentSearchTerm) {
+
+        filteredTasks = filteredTasks.filter(task =>
+            task.title.toLowerCase().includes(currentSearchTerm) ||
+            task.description.toLowerCase().includes(currentSearchTerm)
+        );
+
+    }
+
+    if (filteredTasks.length === 0) {
+
+        emptyState.style.display = "block";
+
+    } else {
+
+        emptyState.style.display = "none";
+
+        filteredTasks.forEach(task => {
+
+            taskList.appendChild(createTaskCard(task));
+
+        });
+
+    }
+
+    updateStatistics();
+
+}
+/*=====================================
+    TASK CARD
+=====================================*/
+
+function createTaskCard(task) {
+
+    const card = document.createElement("article");
+
+    card.className = "task-card";
+    const today = new Date();
+
+    today.setHours(0,0,0,0);
+
+    if (
+        task.dueDate &&
+        !task.completed &&
+        new Date(task.dueDate) < today
+    ){
+
+    card.classList.add("overdue");
+
+    }
+
+    if (task.completed) {
+        card.classList.add("completed");
+    }
+
+    card.dataset.id = task.id;
+
+    card.innerHTML = `
+
+        <div class="task-header">
+
+            <div>
+
+                <h3>${task.title}</h3>
+
+                <p class="task-description">
+                    ${task.description || "No description"}
+                </p>
+
+            </div>
+
+            <span class="priority ${task.priority.toLowerCase()}">
+                ${task.priority}
+            </span>
+
+        </div>
+
+        <div class="task-footer">
+
+            <div class="task-meta">
+
+                <span>${task.category}</span>
+
+                <span>${formatDate(task.dueDate)}</span>
 
             </div>
 
             <div class="task-actions">
 
-                <button class="icon-btn edit">
-                    <i class="fa-solid fa-pen"></i>
+                <button class="complete-btn">
+                    ${task.completed ? "Undo" : "Done"}
                 </button>
 
-                <button class="icon-btn delete">
-                    <i class="fa-solid fa-trash"></i>
+                <button class="edit-btn">
+                    Edit
+                </button>
+
+                <button class="delete-btn">
+                    Delete
                 </button>
 
             </div>
-        `;
 
-        // Complete Task
-        li.querySelector("input").onclick = () => {
+        </div>
 
-            task.completed = !task.completed;
+    `;
 
-            saveTasks();
+    return card;
 
-            renderTasks();
+}
+function formatDate(date) {
 
-            if (tasks.length && tasks.every(t => t.completed)) {
+    if (!date) return "No Due Date";
 
-                showToast("🎉 All Tasks Completed!");
+    return new Date(date).toLocaleDateString(undefined, {
 
-                launchConfetti();
+        day: "numeric",
 
-            }
+        month: "short",
 
-        };
-
-        // Edit Task
-        li.querySelector(".edit").onclick = () => {
-
-            editIndex = index;
-
-            modalTitle.textContent = "Edit Task";
-
-            taskInput.value = task.title;
-
-            taskDescription.value = task.desc;
-
-            openModal(true);
-
-        };
-
-        // Delete Task
-        li.querySelector(".delete").onclick = () => {
-
-            deleteIndex = index;
-
-            confirmModal.classList.add("show");
-
-        };
-
-        taskList.appendChild(li);
+        year: "numeric"
 
     });
 
 }
+/*=====================================
+    STATISTICS
+=====================================*/
 
-// ================================
-// DELETE
-// ================================
+function updateStatistics() {
 
-confirmDelete.onclick = () => {
+    const total = tasks.length;
 
-    tasks.splice(deleteIndex, 1);
+    const completed = tasks.filter(task => task.completed).length;
 
-    saveTasks();
+    const pending = total - completed;
 
-    renderTasks();
+    document.getElementById("totalTasks").textContent = total;
 
-    confirmModal.classList.remove("show");
+    document.getElementById("completedTasks").textContent = completed;
 
-    showToast("🗑 Task Deleted");
+    document.getElementById("pendingTasks").textContent = pending;
 
-};
+}
+/*=====================================
+    EVENTS
+=====================================*/
 
-cancelDelete.onclick = () => {
+addTaskBtn.addEventListener("click", openModal);
 
-    confirmModal.classList.remove("show");
+cancelBtn.addEventListener("click", closeModal);
+window.addEventListener("click", (event) => {
 
-};
+    if (event.target === taskModal) {
 
-// Close modal by clicking outside
-window.onclick = e => {
-
-    if (e.target === modal)
-        closeTaskModal();
-
-    if (e.target === confirmModal)
-        confirmModal.classList.remove("show");
-
-};
-
-// ================================
-// SIMPLE CONFETTI
-// ================================
-
-const canvas = document.getElementById("confetti");
-const ctx = canvas.getContext("2d");
-
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-
-window.addEventListener("resize", () => {
-
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-});
-
-function launchConfetti() {
-
-    let particles = [];
-
-    for (let i = 0; i < 120; i++) {
-
-        particles.push({
-
-            x: Math.random() * canvas.width,
-            y: -20,
-
-            size: Math.random() * 8 + 4,
-
-            speed: Math.random() * 4 + 2,
-
-            color: `hsl(${Math.random() * 360},80%,60%)`
-
-        });
+        closeModal();
 
     }
 
-    let animation = setInterval(() => {
+});
 
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+document.addEventListener("keydown", (event) => {
 
-        particles.forEach(p => {
+    if (event.key === "Escape") {
 
-            p.y += p.speed;
+        closeModal();
 
-            ctx.fillStyle = p.color;
+    }
 
-            ctx.fillRect(p.x, p.y, p.size, p.size);
+});
 
-        });
+taskForm.addEventListener("submit", (event) => {
 
-    }, 16);
+    event.preventDefault();
 
-    setTimeout(() => {
+    if (!validateForm()) {
 
-        clearInterval(animation);
+        return;
 
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
 
-    }, 2000);
+    if (editingTaskId) {
+
+    const task = tasks.find(task => task.id === editingTaskId);
+
+    task.title = taskTitle.value.trim();
+
+    task.description = taskDescription.value.trim();
+
+    task.category = taskCategory.value;
+
+    task.priority = taskPriority.value;
+
+    task.dueDate = taskDate.value;
+
+    editingTaskId = null;
+
+    document.getElementById("modalTitle").textContent = "Add Task";
+
+    showToast("Task updated.");
+
+} else {
+
+    tasks.push(createTaskObject());
+
+    showToast("Task added.");
 
 }
 
-// ================================
-// INITIALIZE
-// ================================
+    renderTasks();
+    
+    saveTasks();
+
+    showToast("Task added successfully.");
+
+    closeModal();
+
+});
+
+document
+    .getElementById("searchInput")
+    .addEventListener("input", (event) => {
+
+        currentSearchTerm = event.target.value
+            .trim()
+            .toLowerCase();
+
+        renderTasks();
+
+    });
+
+document
+    .getElementById("filterCategory")
+    .addEventListener("change", (event) => {
+
+        currentCategoryFilter = event.target.value;
+
+        renderTasks();
+
+    });
+
+document
+    .querySelectorAll(".filter-btn")
+    .forEach(button => {
+
+        button.addEventListener("click", () => {
+
+            document
+                .querySelector(".filter-btn.active")
+                ?.classList.remove("active");
+
+            button.classList.add("active");
+
+            currentStatusFilter = button.dataset.filter;
+
+            renderTasks();
+
+        });
+
+    });
+
+document
+    .getElementById("themeToggle")
+    .addEventListener("click", toggleTheme);
+/*=====================================
+    TASK ACTIONS
+=====================================*/
+
+document
+    .getElementById("taskList")
+    .addEventListener("click", handleTaskActions);
+
+function handleTaskActions(event) {
+
+    const card = event.target.closest(".task-card");
+
+    if (!card) return;
+
+    const id = Number(card.dataset.id);
+
+    if (event.target.classList.contains("delete-btn")) {
+
+        deleteTask(id);
+
+    }
+
+    if (event.target.classList.contains("complete-btn")) {
+
+        toggleTask(id);
+
+    }
+
+    if (event.target.classList.contains("edit-btn")) {
+
+        editTask(id);
+
+    }
+
+}
+
+function deleteTask(id) {
+
+    tasks = tasks.filter(task => task.id !== id);
+
+    renderTasks();
+
+    saveTasks();
+    showToast("Task deleted.");
+
+}
+
+function toggleTask(id) {
+
+    const task = tasks.find(task => task.id === id);
+
+    if (!task) return;
+
+    task.completed = !task.completed;
+
+    renderTasks();
+
+    showToast(task.completed ? "Task completed." : "Task restored.");
+
+}
+
+function editTask(id) {
+
+    const task = tasks.find(task => task.id === id);
+
+    if (!task) return;
+
+    editingTaskId = id;
+
+    taskTitle.value = task.title;
+
+    taskDescription.value = task.description;
+
+    taskCategory.value = task.category;
+
+    taskPriority.value = task.priority;
+
+    taskDate.value = task.dueDate;
+
+    document.getElementById("modalTitle").textContent = "Edit Task";
+
+    openModal();
+
+}
+/*=====================================
+    INITIALIZE
+=====================================*/
+
+loadTheme();
+loadTasks();
 
 renderTasks();

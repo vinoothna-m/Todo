@@ -1,232 +1,241 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>To Do List</title>
+
+    <title>TaskFlow | To-Do App</title>
 
     <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- Font Awesome -->
-    <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
-
+    <!-- CSS -->
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<div class="container">
+    <!-- =========================
+         APP CONTAINER
+    ========================== -->
+    <div class="app-container">
 
-    <!-- Header -->
+        <!-- =========================
+             HEADER
+        ========================== -->
+        <header class="header">
 
-    <header>
+            <div class="header-text">
+                <h1>TaskFlow</h1>
+                <p>Stay organized. Finish what matters.</p>
+            </div>
 
-        <div>
-            <h1>To Do List</h1>
-            <p>Stay organized, one task at a time.</p>
-        </div>
+            <button id="themeToggle" class="theme-btn" aria-label="Toggle Theme">
+                🌙
+            </button>
 
-        <button id="themeBtn" class="theme-btn">
-            <i class="fa-solid fa-moon"></i>
-        </button>
+        </header>
 
-    </header>
+        <!-- =========================
+             STATS
+        ========================== -->
+        <section class="stats">
 
-    <!-- Main -->
+            <div class="stat-card">
+                <h3>Total</h3>
+                <span id="totalTasks">0</span>
+            </div>
 
-    <main>
+            <div class="stat-card">
+                <h3>Pending</h3>
+                <span id="pendingTasks">0</span>
+            </div>
 
-        <!-- Left -->
-
-        <section class="todo-section">
-
-            <div class="card">
-
-                <div class="card-header">
-
-                    <h2>
-                        Today's Tasks
-                    </h2>
-
-                    <span id="taskCount">
-                        0 Tasks
-                    </span>
-
-                </div>
-
-                <div id="emptyState" class="empty">
-
-                    <i class="fa-regular fa-note-sticky"></i>
-
-                    <h3>No Tasks Yet</h3>
-
-                    <p>Click the + button below to add your first task.</p>
-
-                </div>
-
-                <ul id="taskList">
-
-                </ul>
-
+            <div class="stat-card">
+                <h3>Completed</h3>
+                <span id="completedTasks">0</span>
             </div>
 
         </section>
 
-        <!-- Right -->
+        <!-- =========================
+             TOOLBAR
+        ========================== -->
+        <section class="toolbar">
 
-        <aside class="sidebar">
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Search tasks...">
 
-            <div class="note-card">
+            <select id="filterCategory">
+                <option value="all">All Categories</option>
+                <option value="Personal">Personal</option>
+                <option value="Work">Work</option>
+                <option value="Study">Study</option>
+                <option value="Shopping">Shopping</option>
+            </select>
 
-                <h3>
-                    📝 Notes
-                </h3>
+            <button id="addTaskBtn">
+                + New Task
+            </button>
 
-                <textarea
-                    id="notes"
-                    placeholder="Write notes here..."
-                ></textarea>
+        </section>
+
+        <!-- =========================
+             FILTER BUTTONS
+        ========================== -->
+        <section class="filters">
+
+            <button class="filter-btn active" data-filter="all">
+                All
+            </button>
+
+            <button class="filter-btn" data-filter="active">
+                Active
+            </button>
+
+            <button class="filter-btn" data-filter="completed">
+                Completed
+            </button>
+
+        </section>
+
+        <!-- =========================
+             TASK LIST
+        ========================== -->
+        <main>
+
+            <div id="taskList" class="task-list">
+
+                <!-- JavaScript will create task cards here -->
 
             </div>
 
-            <div class="note-card">
+            <!-- Empty State -->
+            <div id="emptyState" class="empty-state">
 
-                <h3>
-                    🎯 Focus
-                </h3>
+                <div class="empty-icon">
+                    📝
+                </div>
 
-                <textarea
-                    id="focus"
-                    placeholder="Today's main goal..."
-                ></textarea>
+                <h2>You're All Caught Up</h2>
 
-            </div>
-
-            <div class="note-card">
-
-                <h3>
-                    💡 Remember
-                </h3>
-
-                <textarea
-                    id="remember"
-                    placeholder="Don't forget..."
-                ></textarea>
+                <p>Add a new task to start planning your day.</p>
 
             </div>
 
-        </aside>
+        </main>
 
-    </main>
+    </div>
 
-</div>
+    <!-- =========================
+         ADD / EDIT MODAL
+    ========================== -->
+    <div id="taskModal" class="modal" aria-hidden="true">
 
-<!-- Floating Button -->
-
-<button id="addTaskBtn" class="fab">
-
-    <i class="fa-solid fa-plus"></i>
-
-</button>
-
-<!-- Add/Edit Modal -->
-
-<div id="taskModal" class="modal">
-
-    <div class="modal-content">
-
-        <div class="modal-header">
+        <div class="modal-content">
 
             <h2 id="modalTitle">
                 Add Task
             </h2>
 
-            <button id="closeModal">
+            <form id="taskForm">
 
-                <i class="fa-solid fa-xmark"></i>
+                <div class="form-group">
 
-            </button>
+                    <label>Task Title</label>
 
-        </div>
+                    <input
+                        type="text"
+                        id="taskTitle"
+                        placeholder="Enter task title">
 
-        <input
-            id="taskInput"
-            type="text"
-            placeholder="What needs to be done?"
-            maxlength="100"
-        >
+                </div>
 
-        <textarea
-            id="taskDescription"
-            placeholder="Optional description..."
-        ></textarea>
+                <div class="form-group">
 
-        <div class="modal-actions">
+                    <label>Description</label>
 
-            <button id="cancelBtn" class="secondary">
+                    <textarea
+                        id="taskDescription"
+                        rows="3"
+                        placeholder="Task description"></textarea>
 
-                Cancel
+                </div>
 
-            </button>
+                <div class="form-row">
 
-            <button id="saveTask">
+                    <div class="form-group">
 
-                Save Task
+                        <label>Category</label>
 
-            </button>
+                        <select id="taskCategory">
+
+                            <option>Personal</option>
+                            <option>Work</option>
+                            <option>Study</option>
+                            <option>Shopping</option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>Priority</label>
+
+                        <select id="taskPriority">
+
+                            <option>Low</option>
+                            <option>Medium</option>
+                            <option>High</option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>Due Date</label>
+
+                    <input
+                        type="date"
+                        id="taskDate">
+
+                </div>
+
+                <div class="modal-buttons">
+
+                    <button
+                        type="button"
+                        id="cancelBtn">
+                        Cancel
+                    </button>
+
+                    <button
+                        type="submit"
+                        id="saveTaskBtn">
+                        Save Task
+                    </button>
+
+                </div>
+
+            </form>
 
         </div>
 
     </div>
 
-</div>
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
 
-<!-- Delete Confirmation -->
-
-<div id="confirmModal" class="modal">
-
-    <div class="confirm-box">
-
-        <i class="fa-solid fa-trash-can"></i>
-
-        <h2>Delete Task?</h2>
-
-        <p>This action cannot be undone.</p>
-
-        <div class="confirm-buttons">
-
-            <button id="cancelDelete" class="secondary">
-
-                Cancel
-
-            </button>
-
-            <button id="confirmDelete" class="danger">
-
-                Delete
-
-            </button>
-
-        </div>
-
-    </div>
-
-</div>
-
-<!-- Toast -->
-
-<div id="toast" class="toast">
-
-    Task Added
-
-</div>
-
-<!-- Confetti -->
-
-<canvas id="confetti"></canvas>
-
-<script src="script.js"></script>
+    <!-- JavaScript -->
+    <script src="script.js"></script>
 
 </body>
+
 </html>
