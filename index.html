@@ -5,192 +5,390 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>TaskFlow | To-Do App</title>
+    <title>TaskFlow | Smart Task Manager</title>
+
+    <meta name="description"
+        content="TaskFlow is a modern task management application built using HTML, CSS and JavaScript.">
+
+    <link rel="icon" href="list.png">
 
     <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <!-- CSS -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Remix Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet">
+
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <!-- =========================
-         APP CONTAINER
-    ========================== -->
-    <div class="app-container">
+    <!-- ===================================== -->
+    <!-- BACKGROUND -->
+    <!-- ===================================== -->
 
-        <!-- =========================
-             HEADER
-        ========================== -->
-        <header class="header">
+    <div class="background-blur blur-one"></div>
+    <div class="background-blur blur-two"></div>
 
-            <div class="header-text">
+    <!-- ===================================== -->
+    <!-- APP -->
+    <!-- ===================================== -->
+
+    <main class="app">
+
+        <!-- ================================= -->
+        <!-- HEADER -->
+        <!-- ================================= -->
+
+        <header class="hero-card">
+
+            <div class="hero-left">
+
+                <span id="greeting" class="greeting">
+                    Good Morning
+                </span>
+
                 <h1>TaskFlow</h1>
-                <p>Stay organized. Finish what matters.</p>
+
+                <p>
+                    Organize your work, stay focused and finish more every day.
+                </p>
+
+                <div class="hero-date">
+
+                    <i class="ri-calendar-line"></i>
+
+                    <span id="currentDate">
+                        Monday, July 21 2026
+                    </span>
+
+                </div>
+
             </div>
 
-            <button id="themeToggle" class="theme-btn" aria-label="Toggle Theme">
-                🌙
-            </button>
+            <div class="hero-right">
+
+                <button
+                    id="themeToggle"
+                    class="theme-btn"
+                    title="Toggle Theme">
+
+                    <i class="ri-moon-line"></i>
+
+                </button>
+
+            </div>
 
         </header>
 
-        <!-- =========================
-             STATS
-        ========================== -->
-        <section class="stats">
+        <!-- ================================= -->
+        <!-- STATS -->
+        <!-- ================================= -->
 
-            <div class="stat-card">
-                <h3>Total</h3>
-                <span id="totalTasks">0</span>
-            </div>
+        <section class="stats-grid">
 
-            <div class="stat-card">
-                <h3>Pending</h3>
-                <span id="pendingTasks">0</span>
-            </div>
+            <article class="stat-card total">
 
-            <div class="stat-card">
-                <h3>Completed</h3>
-                <span id="completedTasks">0</span>
-            </div>
-
-        </section>
-
-        <!-- =========================
-             TOOLBAR
-        ========================== -->
-        <section class="toolbar">
-
-            <input
-                type="text"
-                id="searchInput"
-                placeholder="Search tasks...">
-
-            <select id="filterCategory">
-                <option value="all">All Categories</option>
-                <option value="Personal">Personal</option>
-                <option value="Work">Work</option>
-                <option value="Study">Study</option>
-                <option value="Shopping">Shopping</option>
-            </select>
-
-            <button id="addTaskBtn">
-                + New Task
-            </button>
-
-        </section>
-
-        <!-- =========================
-             FILTER BUTTONS
-        ========================== -->
-        <section class="filters">
-
-            <button class="filter-btn active" data-filter="all">
-                All
-            </button>
-
-            <button class="filter-btn" data-filter="active">
-                Active
-            </button>
-
-            <button class="filter-btn" data-filter="completed">
-                Completed
-            </button>
-
-        </section>
-
-        <!-- =========================
-             TASK LIST
-        ========================== -->
-        <main>
-
-            <div id="taskList" class="task-list">
-
-                <!-- JavaScript will create task cards here -->
-
-            </div>
-
-            <!-- Empty State -->
-            <div id="emptyState" class="empty-state">
-
-                <div class="empty-icon">
-                    📝
+                <div class="stat-icon">
+                    <i class="ri-file-list-3-line"></i>
                 </div>
 
-                <h2>You're All Caught Up</h2>
+                <div>
 
-                <p>Add a new task to start planning your day.</p>
+                    <p>Total Tasks</p>
+
+                    <h2 id="totalTasks">
+                        0
+                    </h2>
+
+                </div>
+
+            </article>
+
+            <article class="stat-card completed">
+
+                <div class="stat-icon">
+                    <i class="ri-checkbox-circle-line"></i>
+                </div>
+
+                <div>
+
+                    <p>Completed</p>
+
+                    <h2 id="completedTasks">
+                        0
+                    </h2>
+
+                </div>
+
+            </article>
+
+            <article class="stat-card pending">
+
+                <div class="stat-icon">
+                    <i class="ri-time-line"></i>
+                </div>
+
+                <div>
+
+                    <p>In Progress</p>
+
+                    <h2 id="pendingTasks">
+                        0
+                    </h2>
+
+                </div>
+
+            </article>
+
+        </section>
+
+        <!-- ================================= -->
+        <!-- CONTROLS -->
+        <!-- ================================= -->
+
+        <section class="controls">
+
+            <div class="search-box">
+
+                <i class="ri-search-line"></i>
+
+                <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="Search tasks...">
 
             </div>
 
-        </main>
+            <select id="categoryFilter">
 
-    </div>
+                <option value="all">All Categories</option>
+                <option>Work</option>
+                <option>Study</option>
+                <option>Personal</option>
+                <option>Shopping</option>
+                <option>Health</option>
+                <option>Finance</option>
+                <option>Others</option>
 
-    <!-- =========================
-         ADD / EDIT MODAL
-    ========================== -->
-    <div id="taskModal" class="modal" aria-hidden="true">
+            </select>
 
-        <div class="modal-content">
+            <select id="sortTasks">
 
-            <h2 id="modalTitle">
-                Add Task
-            </h2>
+                <option value="newest">Newest</option>
+                <option value="oldest">Oldest</option>
+                <option value="priority">Priority</option>
+                <option value="duedate">Due Date</option>
+                <option value="az">A-Z</option>
+
+            </select>
+
+            <button id="openTaskModal" class="primary-btn">
+
+                <i class="ri-add-line"></i>
+
+                New Task
+
+            </button>
+
+        </section>
+
+        <!-- ================================= -->
+        <!-- FILTER TABS -->
+        <!-- ================================= -->
+
+        <section class="tabs">
+
+            <button
+                class="tab-btn active"
+                data-filter="all">
+
+                All
+
+                <span id="allCount">0</span>
+
+            </button>
+
+            <button
+                class="tab-btn"
+                data-filter="active">
+
+                Active
+
+                <span id="activeCount">0</span>
+
+            </button>
+
+            <button
+                class="tab-btn"
+                data-filter="completed">
+
+                Completed
+
+                <span id="completeCount">0</span>
+
+            </button>
+
+        </section>
+
+        <!-- ================================= -->
+        <!-- EMPTY STATE -->
+        <!-- ================================= -->
+
+        <section
+            id="emptyState"
+            class="empty-state hidden">
+
+            <div class="empty-icon">
+
+                <i class="ri-inbox-2-line"></i>
+
+            </div>
+
+            <h3>Nothing to work on yet</h3>
+
+            <p>Create your first task to start organizing your work and stay on top of your priorities.</p>
+
+            <button
+                class="primary-btn"
+                id="emptyCreateTask">
+
+                <i class="ri-add-line"></i>
+
+                Create Task
+
+            </button>
+
+        </section>
+
+        <!-- ================================= -->
+        <!-- TASK LIST -->
+        <!-- ================================= -->
+
+        <section
+            id="taskContainer"
+            class="task-grid">
+
+            <!-- JavaScript renders tasks here -->
+
+        </section>
+
+    </main>
+
+    <!-- ===================================== -->
+    <!-- TASK MODAL -->
+    <!-- ===================================== -->
+
+    <div
+        class="modal-overlay hidden"
+        id="taskModal">
+
+        <div class="modal">
+
+            <div class="modal-header">
+
+                <h2 id="modalTitle">
+
+                    Add New Task
+
+                </h2>
+
+                <button
+                    class="close-modal"
+                    id="closeTaskModal">
+
+                    <i class="ri-close-line"></i>
+
+                </button>
+
+            </div>
 
             <form id="taskForm">
 
+                <input
+                    type="hidden"
+                    id="taskId">
+
+                <!-- Title -->
+
                 <div class="form-group">
 
-                    <label>Task Title</label>
+                    <label>
+
+                        Task Title
+
+                    </label>
 
                     <input
                         type="text"
                         id="taskTitle"
-                        placeholder="Enter task title">
+                        maxlength="80"
+                        required>
 
                 </div>
 
+                <!-- Description -->
+
                 <div class="form-group">
 
-                    <label>Description</label>
+                    <label>
+
+                        Description
+
+                    </label>
 
                     <textarea
                         id="taskDescription"
-                        rows="3"
-                        placeholder="Task description"></textarea>
+                        rows="4"
+                        placeholder="Write something..."></textarea>
 
                 </div>
 
                 <div class="form-row">
 
+                    <!-- Category -->
+
                     <div class="form-group">
 
-                        <label>Category</label>
+                        <label>
+
+                            Category
+
+                        </label>
 
                         <select id="taskCategory">
 
-                            <option>Personal</option>
                             <option>Work</option>
                             <option>Study</option>
+                            <option>Personal</option>
                             <option>Shopping</option>
+                            <option>Health</option>
+                            <option>Finance</option>
+                            <option>Others</option>
 
                         </select>
 
                     </div>
+
+                    <!-- Priority -->
 
                     <div class="form-group">
 
-                        <label>Priority</label>
+                        <label>
+
+                            Priority
+
+                        </label>
 
                         <select id="taskPriority">
 
-                            <option>Low</option>
-                            <option>Medium</option>
-                            <option>High</option>
+                            <option value="Low">Low</option>
+                            <option value="Medium" selected>Medium</option>
+                            <option value="High">High</option>
 
                         </select>
 
@@ -198,28 +396,39 @@
 
                 </div>
 
+                <!-- Due -->
+
                 <div class="form-group">
 
-                    <label>Due Date</label>
+                    <label>
+
+                        Due Date
+
+                    </label>
 
                     <input
                         type="date"
-                        id="taskDate">
+                        id="taskDueDate">
 
                 </div>
 
-                <div class="modal-buttons">
+                <div class="modal-actions">
 
                     <button
                         type="button"
-                        id="cancelBtn">
+                        class="secondary-btn"
+                        id="cancelTask">
+
                         Cancel
+
                     </button>
 
                     <button
                         type="submit"
-                        id="saveTaskBtn">
+                        class="primary-btn">
+
                         Save Task
+
                     </button>
 
                 </div>
@@ -230,10 +439,74 @@
 
     </div>
 
-    <!-- Toast Notification -->
-    <div id="toast" class="toast"></div>
+    <!-- ===================================== -->
+    <!-- DELETE MODAL -->
+    <!-- ===================================== -->
 
-    <!-- JavaScript -->
+    <div
+        class="modal-overlay hidden"
+        id="deleteModal">
+
+        <div class="confirm-modal">
+
+            <div class="delete-icon">
+
+                <i class="ri-delete-bin-6-line"></i>
+
+            </div>
+
+            <h3>Delete Task?</h3>
+
+            <p>
+
+                This action is permanent and cannot be undone.
+
+            </p>
+
+            <div class="confirm-actions">
+
+                <button
+                    class="secondary-btn"
+                    id="cancelDelete">
+
+                    Cancel
+
+                </button>
+
+                <button
+                    class="danger-btn"
+                    id="confirmDelete">
+
+                    Delete
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ===================================== -->
+    <!-- TOAST -->
+    <!-- ===================================== -->
+
+    <div
+        id="toastContainer"
+        class="toast-container">
+
+    </div>
+
+    <!-- ===================================== -->
+    <!-- FOOTER -->
+    <!-- ===================================== -->
+
+    <footer>
+
+<p>TaskFlow — Organize work. Stay focused. Achieve more.</p>
+
+    </footer>
+
     <script src="script.js"></script>
 
 </body>
